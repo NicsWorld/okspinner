@@ -2,12 +2,30 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [spin, setSpin] = useState(false);
+
+  const spinHandler = () => {
+    setSpin(!spin);
+  };
 
   return (
-    <section className="home">
-      <div>Ok spinner</div>
-    </section>
+    <>
+      <section className="header">
+        <h1>Ok spinner</h1>
+      </section>
+      <section className="home">
+        <section className="spinner-body">
+          <button
+            onClick={() => {
+              spinHandler();
+            }}
+          >
+            Spin
+          </button>
+          <div className={`spinner ${spin && "spin"}`}></div>
+        </section>
+      </section>
+    </>
   );
 }
 
