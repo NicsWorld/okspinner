@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -7,6 +7,14 @@ function App() {
   const spinHandler = () => {
     setSpin(!spin);
   };
+
+  useEffect(() => {
+    if (spin) {
+      setTimeout(() => {
+        setSpin(false);
+      }, 1000);
+    }
+  }, [spin]);
 
   return (
     <>
@@ -22,7 +30,13 @@ function App() {
           >
             Spin
           </button>
-          <div className={`spinner ${spin && "spin"}`}></div>
+          <div className={`spinner ${spin && "spin"}`}>
+            <div className="sector-1"></div>
+            <div className="sector-2"></div>
+
+            <div className="sector-3"></div>
+            <div className="sector-4"></div>
+          </div>
         </section>
       </section>
     </>
