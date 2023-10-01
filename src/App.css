@@ -44,11 +44,11 @@
   flex-direction: column;
 }
 /* sector style */
-.sector-1 {
+/* .sector-1 {
   width: 100%;
   height: 100%;
   position: absolute;
-  /* clip: rect(0px, 150px, 300px, 0px); */
+  clip: rect(0px, 150px, 300px, 0px);
   transform: rotate(90deg);
   background-color: red;
 }
@@ -76,4 +76,4 @@
   clip: rect(0px, 150px, 300px, 0px);
   transform: rotate(0deg);
   background-color: green;
-}
+} */
