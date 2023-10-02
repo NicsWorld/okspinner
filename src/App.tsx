@@ -4,6 +4,7 @@ import "./App.css";
 function App() {
   const [spin, setSpin] = useState(false);
   const [sectors, setSectors] = useState<number>(4);
+  const [sectorStyle, setSectorStyle] = useState({} as any);
   const spinHandler = () => {
     setSpin(!spin);
   };
@@ -16,27 +17,42 @@ function App() {
     }
   }, [spin]);
 
+  useEffect(() => {
+    // if (sectors % 2 === 0) {
+    //   setSectorStyle({
+    //     clipPath: `rect(150px, 150px, 300px, 0px)`,
+    //   });
+    // } else {
+    //   setSectorStyle({
+    //     clipPath: `rect(0px, 150px, 300px, 0px)`,
+    //   });
+    // }
+    // if more than 4 sectors, clip path should be different
+    if (sectors <= 4) {
+      setSectorStyle({
+        clipPath: `polygon(50% 0px, 50% 50%, 100% 50% , 100% 0px)`,
+      });
+    } else {
+      setSectorStyle({
+        clipPath: `polygon(50% 0px, 50% 50%, 100% calc(100% / ${sectors}) , 100% 0px)`,
+      });
+    }
+  }, [sectors]);
+
   const createSectors = () => {
     let sectorsElements = [];
     for (let i = 0; i < sectors; i++) {
       // style the sectors so that they are evenly spaced in the spinner
-      const styledSector = {
-        transform: `rotate(${(i * 360) / sectors}deg) skewY(${
-          180 / sectors
-        }deg)`,
-        backgroundColor: `hsl(${(i * 360) / sectors}, 100%, 50%)`,
-      };
       sectorsElements.push(
         <div
           style={{
-            // transform: `rotate(${(i * 360) / sectors}deg) skewY(${
-            //   180 / sectors
-            // }deg)`,
             transform: `rotate(${(i * 360) / sectors}deg)`,
             backgroundColor: `hsl(${(i * 360) / sectors}, 100%, 50%)`,
             height: "100%",
             width: "100%",
-            clip: `rect(${i % 2 ? "150px" : "0px"}, 150px, 300px, 0px)`,
+            // third from the right should be equal to the number of sectors, add up to 100% (not 50%)
+            // clipPath: `polygon(50% 0px, 50% 50%, 100% calc(100% / ${sectors}) , 100% 0px)`,
+            clipPath: sectorStyle.clipPath,
             position: "absolute",
           }}
           className={`sector-${i + 1}`}
@@ -57,6 +73,7 @@ function App() {
           value={sectors}
           onChange={(e) => {
             setSectors(parseInt(e.target.value));
+            createSectors();
           }}
         />
       </section>
