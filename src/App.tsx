@@ -18,23 +18,33 @@ function App() {
   }, [spin]);
 
   useEffect(() => {
-    // if (sectors % 2 === 0) {
-    //   setSectorStyle({
-    //     clipPath: `rect(150px, 150px, 300px, 0px)`,
-    //   });
-    // } else {
-    //   setSectorStyle({
-    //     clipPath: `rect(0px, 150px, 300px, 0px)`,
-    //   });
-    // }
-    // if more than 4 sectors, clip path should be different
+    console.log("Sectors: ", sectors);
+
     if (sectors <= 4) {
-      setSectorStyle({
-        clipPath: `polygon(50% 0px, 50% 50%, 100% 50% , 100% 0px)`,
-      });
+      if (sectors === 1) {
+        setSectorStyle({
+          clipPath: `polygon(0% 0px, 0% 100%, 100% 100%, 100% 0px)`,
+        });
+        // polygon(0% 0px, 0% 100%, 100% 100%, 100% 0px)
+      }
+      if (sectors < 4 && sectors % 2 === 0) {
+        setSectorStyle({
+          clipPath: `polygon(0% 0px, 50% 50%, 100% 100% , 100% 0px)`,
+        });
+      } else if (sectors === 4) {
+        setSectorStyle({
+          clipPath: `polygon(50% 0px, 50% 50%, 100% 50% , 100% 0px)`,
+        });
+      } else {
+        setSectorStyle({
+          clipPath: `polygon(0% 0px, 50% 50%, 100% 50% , 100% 0px)`,
+        });
+      }
     } else {
+      const calculatedValue = 100 / sectors;
+      const percentMinusCalculatedValue = 100 - calculatedValue;
       setSectorStyle({
-        clipPath: `polygon(50% 0px, 50% 50%, 100% calc(100% / ${sectors}) , 100% 0px)`,
+        clipPath: `polygon(${calculatedValue}% 0px, 50% 50%, ${percentMinusCalculatedValue}% ${calculatedValue}% , 100% 0px)`,
       });
     }
   }, [sectors]);
