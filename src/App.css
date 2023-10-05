@@ -15,8 +15,8 @@
 }
 /* spinner style */
 .spinner {
-  width: 300px;
-  height: 300px;
+  width: 600px;
+  height: 600px;
   border: 10px solid #ccc;
   border-top-color: #333;
   border-radius: 50%;

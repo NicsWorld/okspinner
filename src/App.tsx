@@ -25,7 +25,6 @@ function App() {
         setSectorStyle({
           clipPath: `polygon(0% 0px, 0% 100%, 100% 100%, 100% 0px)`,
         });
-        // polygon(0% 0px, 0% 100%, 100% 100%, 100% 0px)
       }
       if (sectors < 4 && sectors % 2 === 0) {
         setSectorStyle({
@@ -40,11 +39,21 @@ function App() {
           clipPath: `polygon(0% 0px, 50% 50%, 100% 50% , 100% 0px)`,
         });
       }
-    } else {
+    } else if (sectors < 7) {
       const calculatedValue = 100 / sectors;
       const percentMinusCalculatedValue = 100 - calculatedValue;
       setSectorStyle({
         clipPath: `polygon(${calculatedValue}% 0px, 50% 50%, ${percentMinusCalculatedValue}% ${calculatedValue}% , 100% 0px)`,
+
+        // clipPath: `polygon(25% 0px, 50% 50%, ${percentMinusCalculatedValue}% ${calculatedValue}% , 100% 0px)`,
+      });
+    } else if (sectors === 7) {
+      setSectorStyle({
+        clipPath: `polygon(56% 0px, 50% 50%, 0% 0px, 100% 0px)`,
+      });
+    } else if (sectors > 7) {
+      setSectorStyle({
+        clipPath: `polygon(50% 0px, 50% 50%, 0% 0px, 100% 0px)`,
       });
     }
   }, [sectors]);
@@ -52,7 +61,10 @@ function App() {
   const createSectors = () => {
     let sectorsElements = [];
     for (let i = 0; i < sectors; i++) {
-      // style the sectors so that they are evenly spaced in the spinner
+      // last child keeps coming out too large....
+      const lastChild = i === sectors - 1;
+
+      // style the sectors so that they take up equal space relative to the number of sectors
       sectorsElements.push(
         <div
           style={{
@@ -60,8 +72,6 @@ function App() {
             backgroundColor: `hsl(${(i * 360) / sectors}, 100%, 50%)`,
             height: "100%",
             width: "100%",
-            // third from the right should be equal to the number of sectors, add up to 100% (not 50%)
-            // clipPath: `polygon(50% 0px, 50% 50%, 100% calc(100% / ${sectors}) , 100% 0px)`,
             clipPath: sectorStyle.clipPath,
             position: "absolute",
           }}
