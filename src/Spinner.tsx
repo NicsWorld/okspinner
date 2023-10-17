@@ -90,7 +90,6 @@ export default function Spinner({
 
   const spin = () => {
     // spin the canvas by a random amount
-    // make it go slower at the start and end
     const maxAngle = 8 * Math.PI + Math.random() * 2 * Math.PI;
     const duration = 3000;
     const startTime = Date.now();

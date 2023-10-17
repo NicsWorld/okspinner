@@ -6,20 +6,20 @@ export default function App() {
     "Angry",
     "Sad",
     "Frustration",
-    "Emptyness",
-    "Lol",
-    "WTF",
-    "OMG",
+    // "Emptyness",
+    // "Lol",
+    // "WTF",
+    // "OMG",
   ];
   const segmentColors = [
     "#EE4040",
     "#F0CF50",
     "#815CD1",
     "#3DA5E0",
-    "#34A24F",
-    "#F9AA1F",
-    "#EC3F3F",
-    "#FF9000",
+    // "#34A24F",
+    // "#F9AA1F",
+    // "#EC3F3F",
+    // "#FF9000",
   ];
   const onFinished = (winner: any) => {
     console.log(winner);
