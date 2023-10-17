@@ -10,7 +10,8 @@ export default function Spinner({
   size,
   segmentColors,
 }: SpinnerProps) {
-  const [angleCurrent, setAngleCurrent] = useState(0);
+  // const [angleCurrent, setAngleCurrent] = useState(0);
+  let angleCurrent = 0;
   const centerX = 300;
   const centerY = 300;
   useEffect(() => {
@@ -18,8 +19,10 @@ export default function Spinner({
   }, []);
 
   const initWheel = () => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     clear();
     drawWheel();
+    canvas.addEventListener("click", spin, false);
   };
 
   const clear = () => {
@@ -84,6 +87,45 @@ export default function Spinner({
     ctx.fillText(value.substring(0, 21), size / 2 + 20, 0);
     ctx.restore();
   };
+
+  const spin = () => {
+    // spin the canvas by a random amount
+    // make it go slower at the start and end
+    const maxAngle = 8 * Math.PI + Math.random() * 2 * Math.PI;
+    const duration = 3000;
+    const startTime = Date.now();
+    const endTime = startTime + duration;
+    const startAngle = angleCurrent;
+    const endAngle = angleCurrent + maxAngle;
+    const spinAngleStart = Math.random() * 10 + 10;
+    const spinTime = 0;
+    rotate();
+    function rotate() {
+      const time = Date.now();
+      if (time < endTime) {
+        // ease out
+        const spinAngle =
+          (spinAngleStart - (spinAngleStart * (time - startTime)) / duration) *
+          0.2;
+        console.log(spinAngle);
+        angleCurrent =
+          startAngle +
+          (endAngle - startAngle) * ((time - startTime) / duration) +
+          spinAngle;
+        draw();
+        requestAnimationFrame(rotate);
+      } else {
+        angleCurrent = endAngle;
+        draw();
+      }
+    }
+  };
+
+  const draw = () => {
+    clear();
+    drawWheel();
+  };
+
   return (
     <div id="wheel">
       <canvas
