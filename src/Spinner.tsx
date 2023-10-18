@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import "./Spinner.css";
 interface SpinnerProps {
   segments: string[];
   size: number;
