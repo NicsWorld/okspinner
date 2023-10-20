@@ -3,13 +3,24 @@ import Spinner from "./Spinner";
 export default function App() {
   const segments = ["Happy", "Angry", "Sad", "Frustration"];
   const segmentColors = ["#EE4040", "#F0CF50", "#815CD1", "#3DA5E0"];
-  const onFinished = (winner: any) => {
-    console.log(winner);
-  };
+
   return (
     <div className="App">
       <div className="wrapper">
-        <section className="control-panel">Controls</section>
+        <section className="control-panel">
+          Controls
+          <button
+            onClick={
+              // call the spin function from inside the Spinner component
+              () =>
+                document
+                  .getElementById("canvas")
+                  ?.dispatchEvent(new Event("click"))
+            }
+          >
+            Spin
+          </button>
+        </section>
         <div id="wheelCircle">
           <Spinner
             segments={segments}
