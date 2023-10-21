@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./Spinner.css";
 interface SpinnerProps {
   segments: string[];
@@ -11,6 +11,7 @@ export default function Spinner({
   segmentColors,
 }: SpinnerProps) {
   // const [angleCurrent, setAngleCurrent] = useState(0);
+  const [isSpinning, setIsSpinnging] = useState<boolean>(false);
   let angleCurrent = 0;
   const centerX = 300;
   const centerY = 300;
@@ -89,7 +90,12 @@ export default function Spinner({
   };
 
   const spin = () => {
+    console.log("spin", isSpinning);
+    if (isSpinning) return;
     // spin the canvas by a random amount
+    setIsSpinnging(true);
+    console.log("222", isSpinning);
+
     const maxAngle = 8 * Math.PI + Math.random() * 2 * Math.PI;
     const duration = 3000;
     const startTime = Date.now();
@@ -106,7 +112,7 @@ export default function Spinner({
         const spinAngle =
           (spinAngleStart - (spinAngleStart * (time - startTime)) / duration) *
           0.2;
-        console.log(spinAngle);
+        // console.log(spinAngle);
         angleCurrent =
           startAngle +
           (endAngle - startAngle) * ((time - startTime) / duration) +
@@ -118,6 +124,9 @@ export default function Spinner({
         draw();
       }
     }
+    setTimeout(() => {
+      setIsSpinnging(false);
+    }, 3000);
   };
 
   const draw = () => {
