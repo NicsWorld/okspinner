@@ -9,18 +9,17 @@ export default function App() {
     "Love",
     "Happy",
   ]);
-  const [actualSectors, setActualSectors] = useState<string[]>(sectors);
+  // const [actualSectors, setActualSectors] = useState<string[]>(sectors);
   const segmentColors = ["#EE4040", "#F0CF50", "#815CD1", "#3DA5E0"];
 
   const handleSectorUpdate = () => {
     // for each new line item, update teh sectors array
     // const newSectors = sectors.map((sector) => sector);
   };
-  useEffect(() => {
-    console.log("SECTORS from app", sectors);
-    setActualSectors(sectors);
-    // draw();
-  }, [sectors]);
+  // useEffect(() => {
+  //   // why isnt this working?,
+  //   setActualSectors(sectors);
+  // }, [sectors]);
   return (
     <div className="App">
       <div className="wrapper">
@@ -29,10 +28,12 @@ export default function App() {
           <button
             onClick={
               // call the spin function from inside the Spinner component
-              () =>
+              () => {
+                console.log("sectors", sectors);
                 document
                   .getElementById("canvas")
-                  ?.dispatchEvent(new Event("click"))
+                  ?.dispatchEvent(new Event("click"));
+              }
             }
           >
             Spin
@@ -56,7 +57,8 @@ export default function App() {
         </section>
         <div id="wheelCircle">
           <Spinner
-            sectors={actualSectors}
+            // need to pass the updated values to the Spinner component
+            sectors={sectors}
             size={290}
             segmentColors={segmentColors}
             // segColors={segColors}

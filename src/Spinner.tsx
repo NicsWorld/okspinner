@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Spinner.css";
+
 interface SpinnerProps {
   sectors: string[];
   size: number;
@@ -10,8 +11,10 @@ export default function Spinner({
   size,
   segmentColors,
 }: SpinnerProps) {
-  // const [angleCurrent, setAngleCurrent] = useState(0);
   const [isSpinning, setIsSpinnging] = useState<boolean>(false);
+  const [actualSectors, setActualSectors] = useState<string[]>(sectors);
+  // const [actualSectors, setActualSectors] = useState<string[]>([...sectors]);
+
   let angleCurrent = 0;
   const centerX = 300;
   const centerY = 300;
@@ -22,7 +25,12 @@ export default function Spinner({
   useEffect(() => {
     console.log("SECTORS", sectors);
     draw();
+    setActualSectors(sectors);
   }, [sectors]);
+
+  useEffect(() => {
+    console.log("actualSectors", actualSectors);
+  }, [actualSectors]);
 
   const initWheel = () => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -42,7 +50,7 @@ export default function Spinner({
     const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
 
     let lastAngle = angleCurrent;
-    const len = sectors.length;
+    const len = actualSectors.length;
     const PI2 = Math.PI * 2;
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
@@ -75,7 +83,8 @@ export default function Spinner({
   const drawSegment = (key: number, lastAngle: number, angle: number) => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
-    const value = sectors[key];
+    // get the text to display for the current segment
+    const value = actualSectors[key];
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
@@ -95,13 +104,13 @@ export default function Spinner({
   };
 
   const spin = () => {
-    console.log("actualSectors spin:", sectors);
+    console.log("actualSectors spin:", actualSectors);
     if (isSpinning) return;
     // spin the canvas by a random amount
     setIsSpinnging(true);
 
     const maxAngle = 8 * Math.PI + Math.random() * 2 * Math.PI;
-    const duration = 3000;
+    const duration = 1500;
     const startTime = Date.now();
     const endTime = startTime + duration;
     const startAngle = angleCurrent;
@@ -127,9 +136,9 @@ export default function Spinner({
         draw();
       }
     }
-    setTimeout(() => {
-      setIsSpinnging(false);
-    }, 3000);
+    // setTimeout(() => {
+    //   setIsSpinnging(false);
+    // }, 3000);
   };
 
   const draw = () => {
