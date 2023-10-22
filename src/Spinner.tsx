@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import "./Spinner.css";
 interface SpinnerProps {
-  segments: string[];
+  sectors: string[];
   size: number;
   segmentColors: string[];
 }
 export default function Spinner({
-  segments,
+  sectors,
   size,
   segmentColors,
 }: SpinnerProps) {
@@ -18,6 +18,11 @@ export default function Spinner({
   useEffect(() => {
     initWheel();
   }, []);
+
+  useEffect(() => {
+    console.log("SECTORS", sectors);
+    draw();
+  }, [sectors]);
 
   const initWheel = () => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -37,7 +42,7 @@ export default function Spinner({
     const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
 
     let lastAngle = angleCurrent;
-    const len = segments.length;
+    const len = sectors.length;
     const PI2 = Math.PI * 2;
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
@@ -70,7 +75,7 @@ export default function Spinner({
   const drawSegment = (key: number, lastAngle: number, angle: number) => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
-    const value = segments[key];
+    const value = sectors[key];
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
@@ -90,11 +95,10 @@ export default function Spinner({
   };
 
   const spin = () => {
-    console.log("spin", isSpinning);
+    console.log("actualSectors spin:", sectors);
     if (isSpinning) return;
     // spin the canvas by a random amount
     setIsSpinnging(true);
-    console.log("222", isSpinning);
 
     const maxAngle = 8 * Math.PI + Math.random() * 2 * Math.PI;
     const duration = 3000;
@@ -103,7 +107,6 @@ export default function Spinner({
     const startAngle = angleCurrent;
     const endAngle = angleCurrent + maxAngle;
     const spinAngleStart = Math.random() * 10 + 10;
-    const spinTime = 0;
     rotate();
     function rotate() {
       const time = Date.now();
