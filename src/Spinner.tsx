@@ -18,19 +18,19 @@ export default function Spinner({
   let angleCurrent = 0;
   const centerX = 300;
   const centerY = 300;
+
   useEffect(() => {
     initWheel();
   }, []);
 
   useEffect(() => {
-    console.log("SECTORS", sectors);
-    draw();
+    // console.log("SECTORS", sectors);
+    // clear();
+    // drawWheel();
+    // setActualSectors([...sectors]);
     setActualSectors(sectors);
+    handleSectorUpdate();
   }, [sectors]);
-
-  useEffect(() => {
-    console.log("actualSectors", actualSectors);
-  }, [actualSectors]);
 
   const initWheel = () => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -39,13 +39,23 @@ export default function Spinner({
     canvas.addEventListener("click", spin, false);
   };
 
+  const handleSectorUpdate = () => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    canvas.removeEventListener("click", spin, false);
+    // clear();
+    // draw();
+    initWheel();
+  };
+
   const clear = () => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+    // canvas.removeEventListener("click", spin, false);
     ctx.clearRect(0, 0, 600, 600);
   };
 
   const drawWheel = () => {
+    console.log("DRAWING SECTORS", sectors);
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
 
@@ -70,21 +80,13 @@ export default function Spinner({
     ctx.lineWidth = 25;
     ctx.strokeStyle = "white";
     ctx.stroke();
-
-    // Draw outer circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, size, 0, PI2, false);
-    ctx.closePath();
-    ctx.lineWidth = 25;
-    ctx.strokeStyle = "white";
-    ctx.stroke();
   };
 
   const drawSegment = (key: number, lastAngle: number, angle: number) => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
-    // get the text to display for the current segment
     const value = actualSectors[key];
+
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
@@ -99,47 +101,49 @@ export default function Spinner({
     ctx.rotate((lastAngle + angle) / 2);
     ctx.fillStyle = "white";
     ctx.font = "bold 1em " + "Arial";
+    // ctx.fillText(value, 0, 0);
     ctx.fillText(value.substring(0, 21), size / 2 + 20, 0);
     ctx.restore();
   };
 
-  const spin = () => {
-    console.log("actualSectors spin:", actualSectors);
-    if (isSpinning) return;
-    // spin the canvas by a random amount
-    setIsSpinnging(true);
-
-    const maxAngle = 8 * Math.PI + Math.random() * 2 * Math.PI;
-    const duration = 1500;
-    const startTime = Date.now();
-    const endTime = startTime + duration;
-    const startAngle = angleCurrent;
-    const endAngle = angleCurrent + maxAngle;
-    const spinAngleStart = Math.random() * 10 + 10;
-    rotate();
-    function rotate() {
-      const time = Date.now();
-      if (time < endTime) {
-        // ease out
-        const spinAngle =
-          (spinAngleStart - (spinAngleStart * (time - startTime)) / duration) *
-          0.2;
-        // console.log(spinAngle);
-        angleCurrent =
-          startAngle +
-          (endAngle - startAngle) * ((time - startTime) / duration) +
-          spinAngle;
-        draw();
-        requestAnimationFrame(rotate);
-      } else {
-        angleCurrent = endAngle;
-        draw();
-      }
+  function spin() {
+    // spin the canvas wheel
+    if (isSpinning === false) {
+      setIsSpinnging(true);
+      const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+      const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
+      const spinAngleStart = Math.random() * 10 + 10;
+      const spinTime = 0;
+      const spinTimeTotal = Math.random() * 3 + 4 * 1000;
+      rotateWheel(spinAngleStart, spinTime, spinTimeTotal);
     }
-    // setTimeout(() => {
-    //   setIsSpinnging(false);
-    // }, 3000);
-  };
+  }
+  function rotateWheel(
+    spinAngleStart: number,
+    spinTime: number,
+    spinTimeTotal: number
+  ) {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
+    spinTime += 30;
+    if (spinTime >= spinTimeTotal) {
+      // stopRotateWheel();
+      return;
+    }
+    const spinAngle =
+      spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+    angleCurrent += (spinAngle * Math.PI) / 180;
+    draw();
+    const spinTimeout = setTimeout(function () {
+      rotateWheel(spinAngleStart, spinTime, spinTimeTotal);
+    }, 30);
+  }
+
+  function easeOut(t: number, b: number, c: number, d: number) {
+    const ts = (t /= d) * t;
+    const tc = ts * t;
+    return b + c * (tc + -3 * ts + 3 * t);
+  }
 
   const draw = () => {
     clear();
